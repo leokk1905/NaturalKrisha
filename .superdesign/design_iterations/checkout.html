@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Natural | Secure Payment</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="natural_theme_1.css">
+    
+    <style>
+        /* Consistent sizing system */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .grid-consistent {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 968px) {
+            .checkout-layout { grid-template-columns: 1fr !important; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+        
+        .card-consistent {
+            border-radius: var(--radius-lg);
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+        
+        .heading-xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .heading-lg { font-size: clamp(2rem, 4vw, 3rem); }
+        .heading-md { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .heading-sm { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+        
+        .section-padding { padding: clamp(3rem, 8vw, 6rem) 0; }
+        .content-spacing > * + * { margin-top: 1.5rem; }
+        
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: var(--natural-green-dark);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            transform: scale(1.02);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 200ms ease-out;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary);
+            transition: all 250ms ease-out;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--input);
+            color: var(--foreground);
+            font-family: var(--font-sans);
+            transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(69, 125, 90, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: var(--destructive);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+        
+        .error-message {
+            color: var(--destructive);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 3rem;
+        }
+        
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--muted);
+            color: var(--muted-foreground);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 200ms ease-out;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        
+        .step.completed .step-number {
+            background: var(--natural-green-medium);
+            color: white;
+        }
+        
+        .step-title {
+            font-weight: 500;
+            color: var(--muted-foreground);
+            transition: color 200ms ease-out;
+        }
+        
+        .step.active .step-title {
+            color: var(--primary);
+        }
+        
+        .step.completed .step-title {
+            color: var(--natural-green-dark);
+        }
+        
+        .step-divider {
+            height: 2px;
+            background: var(--border);
+            flex: 1;
+            margin: 0 1rem;
+        }
+        
+        .step.completed + .step .step-divider {
+            background: var(--natural-green-medium);
+        }
+        
+        .payment-method {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: var(--natural-green-light);
+        }
+        
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+        
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+        
+        .summary-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--natural-green-light);
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+        
+        .address-card {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            margin-bottom: 1rem;
+        }
+        
+        .address-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .address-card.selected {
+            border-color: var(--primary);
+            background: var(--natural-green-light);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body style="font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.6;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50" style="background: rgba(249, 250, 251, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);">
+        <nav class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                </div>
+                
+                <!-- Checkout Progress (Desktop) -->
+                <div class="hidden md:flex items-center space-x-4 text-sm">
+                    <span class="text-primary font-medium">Secure Checkout</span>
+                    <i data-lucide="shield-check" class="w-4 h-4 text-primary"></i>
+                </div>
+                
+                <!-- Icons -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    </a>
+                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Checkout Section -->
+    <section class="py-8">
+        <div class="container-custom">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="heading-lg font-serif mb-2">Checkout</h1>
+                <p class="text-gray-600">Complete your sustainable purchase securely.</p>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Shipping</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Payment</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Review</div>
+                </div>
+            </div>
+            
+            <!-- Checkout Content -->
+            <div class="checkout-layout">
+                <!-- Left Column - Forms -->
+                <div>
+                    <!-- Step 1: Shipping Information -->
+                    <div id="shippingStep" class="checkout-step">
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h3>
+                                <i data-lucide="mail" class="w-5 h-5" style="color: var(--primary);"></i>
+                                Contact Information
+                            </h3>
+                            <div class="grid-2">
+                                <div>
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" placeholder="john@example.com" id="email" required>
+                                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                                </div>
+                                <div>
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-input" placeholder="+1 (555) 123-4567" id="phone" required>
+                                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Shipping Address -->
+                        <div class="form-section">
+                            <h3>
+                                <i data-lucide="truck" class="w-5 h-5" style="color: var(--primary);"></i>
+                                Shipping Address
+                            </h3>
+                            
+                            <!-- Saved Addresses -->
+                            <div class="mb-4">
+                                <div class="address-card selected" onclick="selectAddress(this)">
+                                    <input type="radio" name="address" value="saved1" checked>
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="font-medium">Home</div>
+                                            <div class="text-sm text-gray-600">
+                                                John Doe<br>
+                                                123 Sustainable Street<br>
+                                                Eco City, EC 12345<br>
+                                                United States
+                                            </div>
+                                        </div>
+                                        <button class="text-primary hover:underline text-sm">Edit</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="address-card" onclick="selectAddress(this)">
+                                    <input type="radio" name="address" value="saved2">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="font-medium">Work</div>
+                                            <div class="text-sm text-gray-600">
+                                                John Doe<br>
+                                                456 Green Office Park<br>
+                                                Sustainable City, SC 67890<br>
+                                                United States
+                                            </div>
+                                        </div>
+                                        <button class="text-primary hover:underline text-sm">Edit</button>
+                                    </div>
+                                </div>
+                                
+                                <button class="text-primary hover:underline font-medium" onclick="showNewAddress()">
+                                    <i data-lucide="plus" class="w-4 h-4 inline mr-1"></i>
+                                    Add new address
+                                </button>
+                            </div>
+                            
+                            <!-- New Address Form (Hidden) -->
+                            <div id="newAddressForm" style="display: none;">
+                                <div class="grid-2 mb-4">
+                                    <div>
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-input" placeholder="John">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-input" placeholder="Doe">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-input" placeholder="123 Sustainable Street">
+                                </div>
+                                <div class="grid-3 mb-4">
+                                    <div>
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-input" placeholder="Eco City">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">State</label>
+                                        <select class="form-input">
+                                            <option>Select State</option>
+                                            <option>California</option>
+                                            <option>New York</option>
+                                            <option>Texas</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">ZIP Code</label>
+                                        <input type="text" class="form-input" placeholder="12345">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Shipping Options -->
+                        <div class="form-section">
+                            <h3>
+                                <i data-lucide="package" class="w-5 h-5" style="color: var(--primary);"></i>
+                                Shipping Options
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="payment-method selected" onclick="selectShipping(this)">
+                                    <input type="radio" name="shipping" value="carbon-neutral" checked>
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium flex items-center gap-2">
+                                                <i data-lucide="leaf" class="w-4 h-4 text-green-600"></i>
+                                                Carbon Neutral Shipping
+                                            </div>
+                                            <div class="text-sm text-gray-600">5-7 business days • Carbon offset included</div>
+                                        </div>
+                                        <div class="font-semibold text-green-600">FREE</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" onclick="selectShipping(this)">
+                                    <input type="radio" name="shipping" value="express">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Express Shipping</div>
+                                            <div class="text-sm text-gray-600">2-3 business days</div>
+                                        </div>
+                                        <div class="font-semibold">$12.99</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" onclick="selectShipping(this)">
+                                    <input type="radio" name="shipping" value="overnight">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Overnight</div>
+                                            <div class="text-sm text-gray-600">Next business day</div>
+                                        </div>
+                                        <div class="font-semibold">$24.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="nextStep()">Continue to Payment</button>
+                    </div>
+                    
+                    <!-- Step 2: Payment Information -->
+                    <div id="paymentStep" class="checkout-step" style="display: none;">
+                        <!-- Payment Methods -->
+                        <div class="form-section">
+                            <h3>
+                                <i data-lucide="credit-card" class="w-5 h-5" style="color: var(--primary);"></i>
+                                Payment Method
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="payment-method selected" onclick="selectPayment(this)">
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                        <span class="font-medium">Credit or Debit Card</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" onclick="selectPayment(this)">
+                                    <input type="radio" name="payment" value="paypal">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">P</div>
+                                        <span class="font-medium">PayPal</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" onclick="selectPayment(this)">
+                                    <input type="radio" name="payment" value="apple-pay">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="smartphone" class="w-5 h-5"></i>
+                                        <span class="font-medium">Apple Pay</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Details -->
+                        <div id="cardDetails" class="form-section">
+                            <div class="mb-4">
+                                <label class="form-label">Card Number</label>
+                                <input type="text" class="form-input" placeholder="1234 5678 9012 3456" id="cardNumber" maxlength="19">
+                            </div>
+                            <div class="grid-3">
+                                <div class="col-span-2">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-input" placeholder="MM/YY" id="expiry" maxlength="5">
+                                </div>
+                                <div>
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-input" placeholder="123" id="cvv" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Billing Address -->
+                        <div class="form-section">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3>
+                                    <i data-lucide="map-pin" class="w-5 h-5" style="color: var(--primary);"></i>
+                                    Billing Address
+                                </h3>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" checked onchange="toggleBillingAddress()">
+                                    <span class="text-sm">Same as shipping</span>
+                                </label>
+                            </div>
+                            
+                            <div id="billingForm" style="display: none;">
+                                <!-- Billing form fields would go here -->
+                                <div class="text-sm text-gray-600 p-4 bg-gray-50 rounded-lg">
+                                    Billing address form would appear here when "Same as shipping" is unchecked.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button class="btn-secondary" onclick="prevStep()">Back to Shipping</button>
+                            <button class="btn-primary" onclick="nextStep()">Review Order</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Review Order -->
+                    <div id="reviewStep" class="checkout-step" style="display: none;">
+                        <div class="form-section">
+                            <h3>
+                                <i data-lucide="check-circle" class="w-5 h-5" style="color: var(--primary);"></i>
+                                Review Your Order
+                            </h3>
+                            
+                            <!-- Order Summary -->
+                            <div class="space-y-4">
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-medium mb-2">Shipping Address</h4>
+                                    <div class="text-sm text-gray-600">
+                                        John Doe<br>
+                                        123 Sustainable Street<br>
+                                        Eco City, EC 12345<br>
+                                        United States
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-medium mb-2">Payment Method</h4>
+                                    <div class="text-sm text-gray-600">
+                                        Credit Card ending in 3456
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-medium mb-2">Shipping Method</h4>
+                                    <div class="text-sm text-gray-600">
+                                        Carbon Neutral Shipping (5-7 business days) - FREE
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms -->
+                        <div class="form-section">
+                            <label class="flex items-start gap-3">
+                                <input type="checkbox" class="mt-1" required>
+                                <span class="text-sm text-gray-600">
+                                    I agree to Natural's 
+                                    <a href="#" class="text-primary hover:underline">Terms of Service</a> 
+                                    and 
+                                    <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button class="btn-secondary" onclick="prevStep()">Back to Payment</button>
+                            <button class="btn-primary" onclick="placeOrder()">
+                                <i data-lucide="lock" class="w-4 h-4 inline mr-2"></i>
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Order Summary -->
+                <div>
+                    <div class="card-consistent sticky top-24">
+                        <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
+                        
+                        <!-- Order Items -->
+                        <div class="space-y-4 mb-6">
+                            <div class="order-item">
+                                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Organic Cotton Tee" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium">Organic Cotton Tee</div>
+                                    <div class="text-sm text-gray-600">Size: M • Natural White</div>
+                                    <div class="text-sm text-gray-600">Qty: 1</div>
+                                </div>
+                                <div class="font-medium">$45.00</div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Linen Button Shirt" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium">Linen Button Shirt</div>
+                                    <div class="text-sm text-gray-600">Size: L • Sage Green</div>
+                                    <div class="text-sm text-gray-600">Qty: 1</div>
+                                </div>
+                                <div class="font-medium">$78.00</div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Hemp Wide Pants" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium">Hemp Wide Pants</div>
+                                    <div class="text-sm text-gray-600">Size: M • Earth Brown</div>
+                                    <div class="text-sm text-gray-600">Qty: 1</div>
+                                </div>
+                                <div class="font-medium">$92.00</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pricing -->
+                        <div class="border-t pt-4">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span>$215.00</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span class="text-green-600">FREE</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>Tax</span>
+                                <span>$17.20</span>
+                            </div>
+                            
+                            <div class="summary-row total">
+                                <span>Total</span>
+                                <span>$232.20</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Security Badge -->
+                        <div class="security-badge">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-green-600"></i>
+                            <div>
+                                <div class="font-medium text-sm">Secure Checkout</div>
+                                <div class="text-xs text-gray-600">256-bit SSL encryption</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sustainability Impact -->
+                        <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                            <h4 class="font-medium mb-2 text-green-800">Your Impact</h4>
+                            <div class="space-y-1 text-sm text-green-700">
+                                <div>🌱 3 trees will be planted</div>
+                                <div>💧 450L of water saved</div>
+                                <div>🌍 8.5kg CO2 reduced</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        let currentStep = 1;
+        
+        // Step management
+        function nextStep() {
+            if (currentStep < 3) {
+                // Hide current step
+                document.querySelectorAll('.checkout-step').forEach(step => {
+                    step.style.display = 'none';
+                });
+                
+                // Update step indicator
+                document.querySelectorAll('.step')[currentStep - 1].classList.remove('active');
+                document.querySelectorAll('.step')[currentStep - 1].classList.add('completed');
+                
+                currentStep++;
+                
+                // Show next step
+                const steps = ['shippingStep', 'paymentStep', 'reviewStep'];
+                document.getElementById(steps[currentStep - 1]).style.display = 'block';
+                
+                // Update step indicator
+                document.querySelectorAll('.step')[currentStep - 1].classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                // Hide current step
+                document.querySelectorAll('.checkout-step').forEach(step => {
+                    step.style.display = 'none';
+                });
+                
+                // Update step indicator
+                document.querySelectorAll('.step')[currentStep - 1].classList.remove('active');
+                
+                currentStep--;
+                
+                // Show previous step
+                const steps = ['shippingStep', 'paymentStep', 'reviewStep'];
+                document.getElementById(steps[currentStep - 1]).style.display = 'block';
+                
+                // Update step indicator
+                document.querySelectorAll('.step')[currentStep - 1].classList.remove('completed');
+                document.querySelectorAll('.step')[currentStep - 1].classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Selection functions
+        function selectAddress(element) {
+            document.querySelectorAll('.address-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input[type="radio"]').checked = true;
+        }
+        
+        function selectShipping(element) {
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input[type="radio"]').checked = true;
+        }
+        
+        function selectPayment(element) {
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input[type="radio"]').checked = true;
+            
+            // Show/hide card details
+            const cardDetails = document.getElementById('cardDetails');
+            if (element.querySelector('input').value === 'card') {
+                cardDetails.style.display = 'block';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        }
+        
+        function showNewAddress() {
+            const form = document.getElementById('newAddressForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function toggleBillingAddress() {
+            const form = document.getElementById('billingForm');
+            const checkbox = event.target;
+            form.style.display = checkbox.checked ? 'none' : 'block';
+        }
+        
+        // Card number formatting
+        document.getElementById('cardNumber').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            this.value = value;
+        });
+        
+        // Expiry date formatting
+        document.getElementById('expiry').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            this.value = value;
+        });
+        
+        // CVV validation
+        document.getElementById('cvv').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // Place order
+        function placeOrder() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i data-lucide="loader" class="w-4 h-4 inline mr-2 animate-spin"></i>Processing...';
+            button.disabled = true;
+            
+            // Simulate order processing
+            setTimeout(() => {
+                // Redirect to order confirmation
+                window.location.href = 'order-confirmation.html';
+            }, 3000);
+        }
+        
+        // Form validation
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+        });
+        
+        function validateField(field) {
+            const value = field.value.trim();
+            const fieldId = field.id;
+            
+            let isValid = true;
+            let errorMessage = '';
+            
+            switch(fieldId) {
+                case 'email':
+                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                    errorMessage = 'Please enter a valid email address';
+                    break;
+                case 'phone':
+                    isValid = /^[\+]?[\d\s\-\(\)]{10,}$/.test(value);
+                    errorMessage = 'Please enter a valid phone number';
+                    break;
+                case 'cardNumber':
+                    isValid = value.replace(/\s/g, '').length >= 13;
+                    errorMessage = 'Please enter a valid card number';
+                    break;
+                case 'expiry':
+                    isValid = /^\d{2}\/\d{2}$/.test(value);
+                    errorMessage = 'Please enter a valid expiry date';
+                    break;
+                case 'cvv':
+                    isValid = value.length >= 3;
+                    errorMessage = 'Please enter a valid CVV';
+                    break;
+            }
+            
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                if (!isValid && value) {
+                    field.classList.add('error');
+                    errorElement.textContent = errorMessage;
+                    errorElement.style.display = 'block';
+                } else {
+                    field.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+            }
+            
+            return isValid;
+        }
+    </script>
+</body>
+</html>

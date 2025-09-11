@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Natural | Review Your Items</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="natural_theme_1.css">
+    
+    <style>
+        /* Consistent sizing system */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .grid-consistent {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .cart-layout { grid-template-columns: 1fr !important; }
+        }
+        
+        .card-consistent {
+            border-radius: var(--radius-lg);
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+        
+        .heading-xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .heading-lg { font-size: clamp(2rem, 4vw, 3rem); }
+        .heading-md { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .heading-sm { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+        
+        .section-padding { padding: clamp(3rem, 8vw, 6rem) 0; }
+        .content-spacing > * + * { margin-top: 1.5rem; }
+        
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: var(--natural-green-dark);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            transform: scale(1.02);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 200ms ease-out;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary);
+            transition: all 250ms ease-out;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            transition: all 200ms ease-out;
+        }
+        
+        .cart-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            padding: 0.5rem;
+            background: var(--muted);
+            border: none;
+            cursor: pointer;
+            transition: background-color 200ms ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: none;
+            padding: 0.5rem;
+            background: var(--card);
+        }
+        
+        .quantity-input:focus {
+            outline: none;
+        }
+        
+        .promo-code-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .promo-code-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--input);
+        }
+        
+        .promo-code-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(69, 125, 90, 0.1);
+        }
+        
+        .promo-code-input button {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--primary);
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+        
+        .promo-code-input button:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+        
+        .summary-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .empty-cart-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            color: var(--muted-foreground);
+        }
+        
+        .sustainability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--natural-green-light);
+            color: var(--natural-green-dark);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .recommended-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            transition: all 200ms ease-out;
+        }
+        
+        .recommended-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--muted);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 300ms ease-out;
+        }
+    </style>
+</head>
+<body style="font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.6;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50" style="background: rgba(249, 250, 251, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);">
+        <nav class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
+                    <a href="collections.html" class="nav-link">Collections</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="sustainability.html" class="nav-link">Sustainability</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Icons -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="p-2 bg-green-100 rounded-full transition-colors relative">
+                        <i data-lucide="shopping-bag" class="w-5 h-5" style="color: var(--primary);"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                    </a>
+                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </a>
+                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Section -->
+    <section class="py-8">
+        <div class="container-custom">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="heading-lg font-serif mb-2">Shopping Cart</h1>
+                <p class="text-gray-600">Review your sustainable selections before checkout.</p>
+            </div>
+            
+            <!-- Cart Content -->
+            <div class="cart-layout" id="cartContent">
+                <!-- Cart Items -->
+                <div>
+                    <!-- Sustainability Impact Banner -->
+                    <div class="card-consistent mb-6" style="background: var(--natural-green-light); border-color: var(--natural-green-medium);">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="leaf" class="w-6 h-6" style="color: var(--natural-green-dark);"></i>
+                            <h3 class="font-semibold" style="color: var(--natural-green-dark);">Your Positive Impact</h3>
+                        </div>
+                        <div class="grid grid-3 gap-4 text-center">
+                            <div>
+                                <div class="text-lg font-semibold" style="color: var(--natural-green-dark);">3</div>
+                                <div class="text-sm" style="color: var(--natural-green-dark);">Trees Planted</div>
+                            </div>
+                            <div>
+                                <div class="text-lg font-semibold" style="color: var(--natural-green-dark);">450L</div>
+                                <div class="text-sm" style="color: var(--natural-green-dark);">Water Saved</div>
+                            </div>
+                            <div>
+                                <div class="text-lg font-semibold" style="color: var(--natural-green-dark);">8.5kg</div>
+                                <div class="text-sm" style="color: var(--natural-green-dark);">CO2 Reduced</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cart Items List -->
+                    <div id="cartItems">
+                        <!-- Cart Item 1 -->
+                        <div class="cart-item" data-price="45.00" data-id="item1">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80" alt="Organic Cotton Tee" class="w-24 h-24 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h3 class="font-semibold mb-1">Organic Cotton Tee</h3>
+                                <p class="text-sm text-gray-600 mb-2">Size: M • Color: Natural White</p>
+                                <div class="sustainability-badge">
+                                    <i data-lucide="leaf" class="w-4 h-4"></i>
+                                    GOTS Certified
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn" onclick="updateQuantity('item1', -1)">
+                                        <i data-lucide="minus" class="w-4 h-4"></i>
+                                    </button>
+                                    <input type="number" class="quantity-input" value="1" min="1" max="10" id="qty-item1" onchange="updateQuantityInput('item1')">
+                                    <button class="quantity-btn" onclick="updateQuantity('item1', 1)">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-lg" id="price-item1">$45.00</div>
+                                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="removeItem('item1')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 inline mr-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Item 2 -->
+                        <div class="cart-item" data-price="78.00" data-id="item2">
+                            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80" alt="Linen Button Shirt" class="w-24 h-24 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h3 class="font-semibold mb-1">Linen Button Shirt</h3>
+                                <p class="text-sm text-gray-600 mb-2">Size: L • Color: Sage Green</p>
+                                <div class="sustainability-badge">
+                                    <i data-lucide="droplets" class="w-4 h-4"></i>
+                                    Water-Efficient
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn" onclick="updateQuantity('item2', -1)">
+                                        <i data-lucide="minus" class="w-4 h-4"></i>
+                                    </button>
+                                    <input type="number" class="quantity-input" value="1" min="1" max="10" id="qty-item2" onchange="updateQuantityInput('item2')">
+                                    <button class="quantity-btn" onclick="updateQuantity('item2', 1)">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-lg" id="price-item2">$78.00</div>
+                                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="removeItem('item2')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 inline mr-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Item 3 -->
+                        <div class="cart-item" data-price="92.00" data-id="item3">
+                            <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80" alt="Hemp Wide Pants" class="w-24 h-24 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h3 class="font-semibold mb-1">Hemp Wide Pants</h3>
+                                <p class="text-sm text-gray-600 mb-2">Size: M • Color: Earth Brown</p>
+                                <div class="sustainability-badge">
+                                    <i data-lucide="recycle" class="w-4 h-4"></i>
+                                    Regenerative
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn" onclick="updateQuantity('item3', -1)">
+                                        <i data-lucide="minus" class="w-4 h-4"></i>
+                                    </button>
+                                    <input type="number" class="quantity-input" value="1" min="1" max="10" id="qty-item3" onchange="updateQuantityInput('item3')">
+                                    <button class="quantity-btn" onclick="updateQuantity('item3', 1)">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-lg" id="price-item3">$92.00</div>
+                                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="removeItem('item3')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 inline mr-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Continue Shopping -->
+                    <div class="mt-6">
+                        <a href="collections.html" class="btn-secondary">
+                            <i data-lucide="arrow-left" class="w-4 h-4 inline mr-2"></i>
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Order Summary Sidebar -->
+                <div>
+                    <!-- Order Summary -->
+                    <div class="card-consistent mb-6">
+                        <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
+                        
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$215.00</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span class="text-green-600">Free</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span id="tax">$17.20</span>
+                        </div>
+                        
+                        <div class="summary-row" id="discountRow" style="display: none;">
+                            <span>Discount</span>
+                            <span class="text-green-600" id="discount">-$0.00</span>
+                        </div>
+                        
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">$232.20</span>
+                        </div>
+                        
+                        <!-- Promo Code -->
+                        <div class="promo-code-input">
+                            <input type="text" placeholder="Promo code" id="promoCode">
+                            <button onclick="applyPromoCode()">Apply</button>
+                        </div>
+                        
+                        <!-- Checkout Button -->
+                        <div class="mt-6">
+                            <a href="checkout.html" class="btn-primary">
+                                <i data-lucide="lock" class="w-4 h-4 inline mr-2"></i>
+                                Secure Checkout
+                            </a>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div class="mt-4 text-center">
+                            <p class="text-xs text-gray-500 mb-2">Secure payments accepted</p>
+                            <div class="flex justify-center items-center gap-2 text-gray-400">
+                                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                <span class="text-xs">Visa • Mastercard • PayPal • Apple Pay</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Free Shipping Progress -->
+                    <div class="card-consistent mb-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i data-lucide="truck" class="w-5 h-5" style="color: var(--primary);"></i>
+                            <h3 class="font-semibold">Free Shipping Unlocked!</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">
+                            🎉 You qualify for free carbon-neutral shipping!
+                        </p>
+                    </div>
+                    
+                    <!-- Recommended Items -->
+                    <div class="card-consistent">
+                        <h3 class="font-semibold mb-4">Complete Your Look</h3>
+                        
+                        <div class="recommended-item">
+                            <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Recycled Cardigan" class="w-16 h-16 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Recycled Cardigan</h4>
+                                <p class="text-xs text-gray-600">Perfect layering piece</p>
+                                <p class="font-semibold text-sm" style="color: var(--primary);">$125.00</p>
+                            </div>
+                            <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors" onclick="addRecommendedItem('cardigan')">
+                                Add
+                            </button>
+                        </div>
+                        
+                        <div class="recommended-item">
+                            <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80" alt="Hemp Henley" class="w-16 h-16 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Hemp Henley Shirt</h4>
+                                <p class="text-xs text-gray-600">Textured comfort</p>
+                                <p class="font-semibold text-sm" style="color: var(--primary);">$65.00</p>
+                            </div>
+                            <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors" onclick="addRecommendedItem('henley')">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty Cart State (Hidden by default) -->
+            <div id="emptyCart" class="empty-cart" style="display: none;">
+                <div class="card-consistent">
+                    <i data-lucide="shopping-bag" class="empty-cart-icon"></i>
+                    <h2 class="heading-md font-serif mb-4">Your cart is empty</h2>
+                    <p class="text-gray-600 mb-8">Looks like you haven't added any sustainable pieces yet.</p>
+                    <a href="collections.html" class="btn-primary max-w-xs mx-auto">
+                        Explore Collections
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Cart state
+        let cartItems = {
+            item1: { price: 45.00, quantity: 1 },
+            item2: { price: 78.00, quantity: 1 },
+            item3: { price: 92.00, quantity: 1 }
+        };
+        
+        let promoDiscount = 0;
+        
+        // Update quantity
+        function updateQuantity(itemId, change) {
+            const qtyInput = document.getElementById(`qty-${itemId}`);
+            let newQty = parseInt(qtyInput.value) + change;
+            
+            if (newQty < 1) newQty = 1;
+            if (newQty > 10) newQty = 10;
+            
+            qtyInput.value = newQty;
+            cartItems[itemId].quantity = newQty;
+            
+            updateItemPrice(itemId);
+            updateSummary();
+        }
+        
+        // Update quantity from input
+        function updateQuantityInput(itemId) {
+            const qtyInput = document.getElementById(`qty-${itemId}`);
+            let newQty = parseInt(qtyInput.value);
+            
+            if (newQty < 1) newQty = 1;
+            if (newQty > 10) newQty = 10;
+            
+            qtyInput.value = newQty;
+            cartItems[itemId].quantity = newQty;
+            
+            updateItemPrice(itemId);
+            updateSummary();
+        }
+        
+        // Update individual item price
+        function updateItemPrice(itemId) {
+            const priceElement = document.getElementById(`price-${itemId}`);
+            const total = cartItems[itemId].price * cartItems[itemId].quantity;
+            priceElement.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Remove item from cart
+        function removeItem(itemId) {
+            const itemElement = document.querySelector(`[data-id="${itemId}"]`);
+            itemElement.style.animation = 'fadeOut 300ms ease-out';
+            
+            setTimeout(() => {
+                itemElement.remove();
+                delete cartItems[itemId];
+                updateSummary();
+                checkEmptyCart();
+            }, 300);
+        }
+        
+        // Update order summary
+        function updateSummary() {
+            const subtotal = Object.values(cartItems).reduce((sum, item) => {
+                return sum + (item.price * item.quantity);
+            }, 0);
+            
+            const tax = subtotal * 0.08; // 8% tax
+            const total = subtotal + tax - promoDiscount;
+            
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+            
+            // Update cart badge
+            const itemCount = Object.values(cartItems).reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelector('.bg-red-500').textContent = itemCount;
+        }
+        
+        // Apply promo code
+        function applyPromoCode() {
+            const promoInput = document.getElementById('promoCode');
+            const code = promoInput.value.toUpperCase();
+            
+            // Sample promo codes
+            const promoCodes = {
+                'NATURAL10': 0.10,
+                'ECO15': 0.15,
+                'SUSTAINABLE20': 0.20
+            };
+            
+            if (promoCodes[code]) {
+                const subtotal = Object.values(cartItems).reduce((sum, item) => {
+                    return sum + (item.price * item.quantity);
+                }, 0);
+                
+                promoDiscount = subtotal * promoCodes[code];
+                
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discount').textContent = `-$${promoDiscount.toFixed(2)}`;
+                
+                promoInput.value = '';
+                promoInput.placeholder = `${code} applied!`;
+                promoInput.style.borderColor = 'var(--primary)';
+                
+                updateSummary();
+            } else {
+                promoInput.style.borderColor = 'var(--destructive)';
+                promoInput.placeholder = 'Invalid code';
+                promoInput.value = '';
+                
+                setTimeout(() => {
+                    promoInput.style.borderColor = '';
+                    promoInput.placeholder = 'Promo code';
+                }, 2000);
+            }
+        }
+        
+        // Add recommended item
+        function addRecommendedItem(itemType) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            button.textContent = 'Added!';
+            button.style.background = 'var(--primary)';
+            button.style.color = 'white';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+                button.style.color = '';
+            }, 2000);
+            
+            // In a real implementation, this would add the item to the cart
+            console.log(`Added ${itemType} to cart`);
+        }
+        
+        // Check if cart is empty
+        function checkEmptyCart() {
+            if (Object.keys(cartItems).length === 0) {
+                document.getElementById('cartContent').style.display = 'none';
+                document.getElementById('emptyCart').style.display = 'block';
+            }
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(-100%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize cart on page load
+        updateSummary();
+    </script>
+</body>
+</html>

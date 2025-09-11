@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Natural | Create Account</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="natural_theme_1.css">
+    
+    <style>
+        /* Consistent sizing system */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .auth-container {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .card-consistent {
+            border-radius: var(--radius-lg);
+            background: var(--card);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .heading-xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .heading-lg { font-size: clamp(2rem, 4vw, 3rem); }
+        .heading-md { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .heading-sm { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+        
+        .section-padding { padding: clamp(3rem, 8vw, 6rem) 0; }
+        .content-spacing > * + * { margin-top: 1.5rem; }
+        
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: var(--natural-green-dark);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 200ms ease-out;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary);
+            transition: all 250ms ease-out;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--input);
+            color: var(--foreground);
+            font-family: var(--font-sans);
+            transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(69, 125, 90, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: var(--destructive);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+        
+        .error-message {
+            color: var(--destructive);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: var(--muted);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            transition: width 300ms ease-out, background-color 300ms ease-out;
+            width: 0%;
+            background: var(--destructive);
+        }
+        
+        .strength-text {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            color: var(--muted-foreground);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        
+        .divider span {
+            margin: 0 1rem;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--card);
+            color: var(--foreground);
+            font-weight: 500;
+            transition: all 200ms ease-out;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .social-btn:hover {
+            background: var(--muted);
+            transform: translateY(-1px);
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+        
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 1rem; 
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body style="font-family: var(--font-sans); background: linear-gradient(135deg, var(--natural-cream) 0%, var(--secondary) 100%); color: var(--foreground); line-height: 1.6; min-height: 100vh;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50" style="background: rgba(249, 250, 251, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);">
+        <nav class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
+                    <a href="collections.html" class="nav-link">Collections</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="sustainability.html" class="nav-link">Sustainability</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Icons -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    </a>
+                    <a href="login.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </a>
+                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sign Up Section -->
+    <section class="section-padding">
+        <div class="auth-container">
+            <div class="card-consistent animate-fade-in">
+                <div class="p-8">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="heading-md font-serif mb-2">Join Natural</h1>
+                        <p class="text-gray-600">Create your account and start your sustainable journey</p>
+                    </div>
+                    
+                    <!-- Social Signup -->
+                    <div class="space-y-3 mb-6">
+                        <button class="social-btn">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                            </svg>
+                            Sign up with Google
+                        </button>
+                        
+                        <button class="social-btn">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Sign up with Facebook
+                        </button>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span>or sign up with email</span>
+                    </div>
+                    
+                    <!-- Sign Up Form -->
+                    <form id="signupForm" class="space-y-6">
+                        <div class="grid-2">
+                            <div>
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" placeholder="John" required>
+                                <div class="error-message" id="firstNameError">Please enter your first name</div>
+                            </div>
+                            <div>
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" placeholder="Doe" required>
+                                <div class="error-message" id="lastNameError">Please enter your last name</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required>
+                            <div class="error-message" id="emailError">Please enter a valid email address</div>
+                        </div>
+                        
+                        <div>
+                            <label for="password" class="form-label">Password</label>
+                            <div class="relative">
+                                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                                <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword()">
+                                    <i data-lucide="eye" class="w-5 h-5" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">Enter a password</div>
+                            </div>
+                            <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+                        </div>
+                        
+                        <div>
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="••••••••" required>
+                            <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="flex items-start space-x-3">
+                                <input type="checkbox" class="mt-1" id="newsletter" name="newsletter" checked>
+                                <span class="text-sm text-gray-600">
+                                    Subscribe to our newsletter for updates on new sustainable products and exclusive offers
+                                </span>
+                            </label>
+                            
+                            <label class="flex items-start space-x-3">
+                                <input type="checkbox" class="mt-1" id="terms" name="terms" required>
+                                <span class="text-sm text-gray-600">
+                                    I agree to Natural's 
+                                    <a href="#" class="text-primary hover:underline">Terms of Service</a> 
+                                    and 
+                                    <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary" id="submitBtn" disabled>Create Account</button>
+                    </form>
+                    
+                    <!-- Sign In Link -->
+                    <div class="text-center mt-6">
+                        <p class="text-gray-600">
+                            Already have an account? 
+                            <a href="login.html" class="text-primary hover:underline font-medium">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Decorations -->
+        <div class="fixed top-20 left-10 animate-float" style="color: var(--natural-green-light); opacity: 0.3;">
+            <i data-lucide="users" class="w-8 h-8"></i>
+        </div>
+        <div class="fixed bottom-20 right-10 animate-float" style="color: var(--natural-green-medium); opacity: 0.3; animation-delay: 1.5s;">
+            <i data-lucide="heart" class="w-6 h-6"></i>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Form validation state
+        const formState = {
+            firstName: false,
+            lastName: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+            terms: false
+        };
+        
+        // Toggle Password Visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+        
+        // Password Strength Checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length >= 8) strength += 25;
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 12.5;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 12.5;
+            
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            strengthFill.style.width = strength + '%';
+            
+            if (strength < 25) {
+                strengthFill.style.background = 'var(--destructive)';
+                feedback = 'Weak password';
+            } else if (strength < 50) {
+                strengthFill.style.background = '#f59e0b';
+                feedback = 'Fair password';
+            } else if (strength < 75) {
+                strengthFill.style.background = '#10b981';
+                feedback = 'Good password';
+            } else {
+                strengthFill.style.background = 'var(--primary)';
+                feedback = 'Strong password';
+            }
+            
+            strengthText.textContent = password.length > 0 ? feedback : 'Enter a password';
+            return strength >= 50;
+        }
+        
+        // Validation Functions
+        function validateField(fieldId, validationFn, errorMsg) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(fieldId + 'Error');
+            
+            const isValid = validationFn(field.value);
+            formState[fieldId] = isValid;
+            
+            if (isValid) {
+                field.classList.remove('error');
+                errorDiv.style.display = 'none';
+            } else if (field.value) {
+                field.classList.add('error');
+                errorDiv.textContent = errorMsg;
+                errorDiv.style.display = 'block';
+            }
+            
+            updateSubmitButton();
+            return isValid;
+        }
+        
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const allValid = Object.values(formState).every(state => state);
+            submitBtn.disabled = !allValid;
+        }
+        
+        // Field Event Listeners
+        document.getElementById('firstName').addEventListener('input', function() {
+            validateField('firstName', (value) => value.length >= 2, 'First name must be at least 2 characters');
+        });
+        
+        document.getElementById('lastName').addEventListener('input', function() {
+            validateField('lastName', (value) => value.length >= 2, 'Last name must be at least 2 characters');
+        });
+        
+        document.getElementById('email').addEventListener('input', function() {
+            validateField('email', (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), 'Please enter a valid email address');
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            const isStrong = checkPasswordStrength(this.value);
+            validateField('password', (value) => value.length >= 8 && isStrong, 'Password must be at least 8 characters with mixed case, numbers, and symbols');
+            
+            // Re-validate confirm password
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (confirmPassword.value) {
+                validateField('confirmPassword', (value) => value === this.value, 'Passwords do not match');
+            }
+        });
+        
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            validateField('confirmPassword', (value) => value === password, 'Passwords do not match');
+        });
+        
+        document.getElementById('terms').addEventListener('change', function() {
+            formState.terms = this.checked;
+            updateSubmitButton();
+        });
+        
+        // Form Submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            
+            submitButton.textContent = 'Creating Account...';
+            submitButton.disabled = true;
+            
+            // Simulate account creation
+            setTimeout(() => {
+                submitButton.textContent = 'Account Created!';
+                submitButton.style.background = 'var(--natural-green-medium)';
+                
+                setTimeout(() => {
+                    // Redirect to welcome page or login
+                    window.location.href = 'login.html?welcome=true';
+                }, 1000);
+            }, 2000);
+        });
+        
+        // Social Signup Handlers
+        document.querySelectorAll('.social-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const provider = this.textContent.includes('Google') ? 'Google' : 'Facebook';
+                
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                    // Simulate social signup
+                    alert(`${provider} signup would be implemented here`);
+                }, 150);
+            });
+        });
+        
+        // Form Input Animations
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.01)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

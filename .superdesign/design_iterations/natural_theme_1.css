@@ -1,0 +1,173 @@
+:root {
+  /* Colors inspired by the natural green reference */
+  --background: oklch(0.9900 0.0050 120.0000);
+  --foreground: oklch(0.2000 0.0100 120.0000);
+  --card: oklch(0.9850 0.0080 120.0000);
+  --card-foreground: oklch(0.2500 0.0120 120.0000);
+  --popover: oklch(0.9900 0.0050 120.0000);
+  --popover-foreground: oklch(0.2000 0.0100 120.0000);
+  
+  /* Primary green from reference - main brand color */
+  --primary: oklch(0.4500 0.1200 135.0000);
+  --primary-foreground: oklch(0.9900 0.0050 120.0000);
+  
+  /* Secondary lighter green */
+  --secondary: oklch(0.9200 0.0400 125.0000);
+  --secondary-foreground: oklch(0.3000 0.0150 120.0000);
+  
+  /* Muted natural tones */
+  --muted: oklch(0.9400 0.0200 115.0000);
+  --muted-foreground: oklch(0.5000 0.0200 120.0000);
+  
+  /* Accent sage green */
+  --accent: oklch(0.7000 0.0800 130.0000);
+  --accent-foreground: oklch(0.9900 0.0050 120.0000);
+  
+  /* Destructive for errors */
+  --destructive: oklch(0.5500 0.2000 25.0000);
+  --destructive-foreground: oklch(0.9900 0.0050 120.0000);
+  
+  /* Borders and inputs */
+  --border: oklch(0.8800 0.0300 120.0000);
+  --input: oklch(0.9600 0.0200 120.0000);
+  --ring: oklch(0.4500 0.1200 135.0000);
+  
+  /* Chart colors - various green tones */
+  --chart-1: oklch(0.4500 0.1200 135.0000);
+  --chart-2: oklch(0.6000 0.1000 125.0000);
+  --chart-3: oklch(0.7000 0.0800 130.0000);
+  --chart-4: oklch(0.5500 0.0600 140.0000);
+  --chart-5: oklch(0.3500 0.1500 128.0000);
+  
+  /* Sidebar colors */
+  --sidebar: oklch(0.9850 0.0080 120.0000);
+  --sidebar-foreground: oklch(0.2500 0.0120 120.0000);
+  --sidebar-primary: oklch(0.4500 0.1200 135.0000);
+  --sidebar-primary-foreground: oklch(0.9900 0.0050 120.0000);
+  --sidebar-accent: oklch(0.7000 0.0800 130.0000);
+  --sidebar-accent-foreground: oklch(0.9900 0.0050 120.0000);
+  --sidebar-border: oklch(0.8800 0.0300 120.0000);
+  --sidebar-ring: oklch(0.4500 0.1200 135.0000);
+  
+  /* Typography - Minimalist and clean fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+  
+  /* Minimalist design with subtle rounded corners */
+  --radius: 0.375rem;
+  
+  /* Soft, natural shadows */
+  --shadow-2xs: 0 1px 2px 0px hsl(120 20% 0% / 0.03);
+  --shadow-xs: 0 1px 3px 0px hsl(120 20% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(120 20% 0% / 0.08), 0 1px 2px -1px hsl(120 20% 0% / 0.08);
+  --shadow: 0 1px 3px 0px hsl(120 20% 0% / 0.10), 0 1px 2px -1px hsl(120 20% 0% / 0.10);
+  --shadow-md: 0 4px 6px -1px hsl(120 20% 0% / 0.08), 0 2px 4px -1px hsl(120 20% 0% / 0.06);
+  --shadow-lg: 0 10px 15px -3px hsl(120 20% 0% / 0.08), 0 4px 6px -2px hsl(120 20% 0% / 0.05);
+  --shadow-xl: 0 20px 25px -5px hsl(120 20% 0% / 0.08), 0 10px 10px -5px hsl(120 20% 0% / 0.04);
+  --shadow-2xl: 0 25px 50px -12px hsl(120 20% 0% / 0.15);
+  
+  /* Clean letter spacing */
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  
+  /* Consistent spacing system */
+  --spacing: 0.25rem;
+  
+  /* Radius variations */
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Custom Natural brand variables */
+  --natural-green-light: oklch(0.8500 0.0600 125.0000);
+  --natural-green-medium: oklch(0.6500 0.1000 130.0000);
+  --natural-green-dark: oklch(0.3500 0.1500 135.0000);
+  --natural-cream: oklch(0.9700 0.0100 85.0000);
+  --natural-earth: oklch(0.7000 0.0400 80.0000);
+  
+  /* Button hover states */
+  --button-hover-scale: 1.02;
+  --button-active-scale: 0.98;
+  
+  /* Transition timings */
+  --transition-fast: 150ms;
+  --transition-normal: 250ms;
+  --transition-slow: 350ms;
+}
+
+/* Dark mode overrides for evening browsing */
+.dark {
+  --background: oklch(0.1200 0.0200 120.0000);
+  --foreground: oklch(0.9200 0.0100 120.0000);
+  --card: oklch(0.1400 0.0250 120.0000);
+  --card-foreground: oklch(0.9000 0.0120 120.0000);
+  --primary: oklch(0.6000 0.1400 135.0000);
+  --secondary: oklch(0.2000 0.0400 125.0000);
+  --muted: oklch(0.2200 0.0300 115.0000);
+  --muted-foreground: oklch(0.6500 0.0200 120.0000);
+  --accent: oklch(0.5500 0.1000 130.0000);
+  --border: oklch(0.3000 0.0400 120.0000);
+  --input: oklch(0.2500 0.0300 120.0000);
+}
+
+/* Custom utility classes for Natural brand */
+.natural-gradient {
+  background: linear-gradient(135deg, 
+    oklch(0.8500 0.0600 125.0000) 0%, 
+    oklch(0.6500 0.1000 130.0000) 50%, 
+    oklch(0.4500 0.1200 135.0000) 100%);
+}
+
+.natural-text-gradient {
+  background: linear-gradient(135deg, 
+    oklch(0.4500 0.1200 135.0000) 0%, 
+    oklch(0.3500 0.1500 135.0000) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.natural-hover-lift {
+  transition: transform var(--transition-normal) ease-out, box-shadow var(--transition-normal) ease-out;
+}
+
+.natural-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Typography scales for different content */
+.natural-heading-xl {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.1;
+}
+
+.natural-heading-lg {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.2;
+}
+
+.natural-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.6;
+}
+
+.natural-caption {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections - Natural | Sustainable Clothing</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="natural_theme_1.css">
+    
+    <style>
+        /* Consistent sizing system */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .grid-consistent {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .grid-responsive { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .card-consistent {
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+        
+        .img-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .heading-xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .heading-lg { font-size: clamp(2rem, 4vw, 3rem); }
+        .heading-md { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .heading-sm { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+        
+        .section-padding { padding: clamp(3rem, 8vw, 6rem) 0; }
+        .content-spacing > * + * { margin-top: 1.5rem; }
+        
+        .animate-card-hover {
+            transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+        }
+        
+        .animate-card-hover:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: var(--natural-green-dark);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            transform: scale(1.02);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 200ms ease-out;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary);
+            transition: all 250ms ease-out;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--foreground);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .product-grid {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body style="font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.6;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50" style="background: rgba(249, 250, 251, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);">
+        <nav class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
+                    <a href="collections.html" class="nav-link active">Collections</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="sustainability.html" class="nav-link">Sustainability</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Icons -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                    </a>
+                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </a>
+                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative section-padding" style="background: linear-gradient(135deg, var(--natural-cream) 0%, var(--secondary) 100%);">
+        <div class="container-custom text-center">
+            <div class="max-w-3xl mx-auto content-spacing">
+                <h1 class="heading-xl font-serif font-light">Our Collections</h1>
+                <p class="text-lg text-gray-600">
+                    Discover thoughtfully crafted pieces made from the finest sustainable materials. 
+                    Each collection tells a story of conscious design and timeless style.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-8" style="background: var(--muted);">
+        <div class="container-custom">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="filter-btn active" data-filter="all">All Items</button>
+                <button class="filter-btn" data-filter="new">New Arrivals</button>
+                <button class="filter-btn" data-filter="essentials">Essentials</button>
+                <button class="filter-btn" data-filter="seasonal">Seasonal</button>
+                <button class="filter-btn" data-filter="sustainable">Sustainable</button>
+                <button class="filter-btn" data-filter="tops">Tops</button>
+                <button class="filter-btn" data-filter="bottoms">Bottoms</button>
+                <button class="filter-btn" data-filter="outerwear">Outerwear</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="section-padding">
+        <div class="container-custom">
+            <div class="grid-consistent grid-4 product-grid" id="productGrid">
+                
+                <!-- Product 1 -->
+                <div class="card-consistent animate-card-hover" data-category="new tops essentials">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Organic Cotton Tee" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Organic Cotton Tee</h3>
+                        <p class="text-sm text-gray-600">Soft, breathable, timeless design</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$45</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="card-consistent animate-card-hover" data-category="essentials tops sustainable">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Linen Button Shirt" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Linen Button Shirt</h3>
+                        <p class="text-sm text-gray-600">Natural fiber comfort</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$78</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="card-consistent animate-card-hover" data-category="bottoms sustainable essentials">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Hemp Wide Pants" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Hemp Wide Pants</h3>
+                        <p class="text-sm text-gray-600">Durable and stylish</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$92</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="card-consistent animate-card-hover" data-category="outerwear sustainable seasonal">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Recycled Cardigan" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Recycled Cardigan</h3>
+                        <p class="text-sm text-gray-600">Cozy recycled materials</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$125</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="card-consistent animate-card-hover" data-category="new tops seasonal">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Bamboo Tank Top" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Bamboo Tank Top</h3>
+                        <p class="text-sm text-gray-600">Ultra-soft bamboo fiber</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$38</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="card-consistent animate-card-hover" data-category="bottoms essentials sustainable">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1506629905607-c90f31e76c78?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Organic Denim" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Organic Denim Jeans</h3>
+                        <p class="text-sm text-gray-600">Classic cut, eco-friendly</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$98</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="card-consistent animate-card-hover" data-category="outerwear new seasonal">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Wool Blend Coat" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Wool Blend Coat</h3>
+                        <p class="text-sm text-gray-600">Ethically sourced wool</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$185</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="card-consistent animate-card-hover" data-category="tops essentials sustainable">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Hemp Henley" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Hemp Henley Shirt</h3>
+                        <p class="text-sm text-gray-600">Textured, long-lasting</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$65</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 9 -->
+                <div class="card-consistent animate-card-hover" data-category="bottoms new essentials">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Linen Shorts" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Linen Summer Shorts</h3>
+                        <p class="text-sm text-gray-600">Breathable summer essential</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$52</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 10 -->
+                <div class="card-consistent animate-card-hover" data-category="tops sustainable seasonal">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tencel Blouse" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Tencel Blouse</h3>
+                        <p class="text-sm text-gray-600">Silky, sustainable luxury</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$88</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 11 -->
+                <div class="card-consistent animate-card-hover" data-category="outerwear sustainable essentials">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1566479179817-d72a0892e4bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Organic Hoodie" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Organic Cotton Hoodie</h3>
+                        <p class="text-sm text-gray-600">Comfort meets conscience</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$75</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 12 -->
+                <div class="card-consistent animate-card-hover" data-category="bottoms new sustainable">
+                    <div class="h-64">
+                        <img src="https://images.unsplash.com/photo-1541840031508-326b77c9a17e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Recycled Leggings" class="img-cover">
+                    </div>
+                    <div class="p-4 content-spacing">
+                        <h3 class="font-semibold">Recycled Leggings</h3>
+                        <p class="text-sm text-gray-600">Made from plastic bottles</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold" style="color: var(--primary);">$42</span>
+                            <button class="btn-primary text-sm px-4 py-2">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="section-padding" style="background: var(--card); border-top: 1px solid var(--border);">
+        <div class="container-custom">
+            <div class="grid grid-4 gap-8">
+                <!-- Company Info -->
+                <div class="content-spacing">
+                    <h3 class="font-serif text-xl natural-text-gradient">Natural</h3>
+                    <p class="text-sm text-gray-600">
+                        Sustainable clothing for the conscious modern lifestyle.
+                    </p>
+                    <div class="flex space-x-4">
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Shop</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
+                    </div>
+                </div>
+                
+                <!-- Support -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Size Guide</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping & Returns</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Care Instructions</a></div>
+                        <div><a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
+                    </div>
+                </div>
+                
+                <!-- Company -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
+                        <div><a href="sustainability.html" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t pt-8 mt-8 text-center text-sm text-gray-600" style="border-color: var(--border);">
+                <p>&copy; 2024 Natural. All rights reserved. Made with love for the planet.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.card-consistent');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.dataset.filter;
+                
+                productCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const categories = card.dataset.category;
+                        if (categories && categories.includes(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Re-trigger animation
+                const productGrid = document.getElementById('productGrid');
+                productGrid.style.animation = 'none';
+                productGrid.offsetHeight; // Trigger reflow
+                productGrid.style.animation = 'fadeIn 0.5s ease-out';
+            });
+        });
+        
+        // Cart animation
+        document.querySelectorAll('button:contains("Add to Cart")').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                    this.textContent = 'Added!';
+                    setTimeout(() => {
+                        this.textContent = 'Add to Cart';
+                    }, 1000);
+                }, 150);
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

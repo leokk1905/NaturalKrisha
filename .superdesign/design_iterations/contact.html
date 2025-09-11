@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Natural | Get in Touch</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="natural_theme_1.css">
+    
+    <style>
+        /* Consistent sizing system */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .grid-consistent {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .card-consistent {
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+        
+        .img-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .heading-xl { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .heading-lg { font-size: clamp(2rem, 4vw, 3rem); }
+        .heading-md { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .heading-sm { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+        
+        .section-padding { padding: clamp(3rem, 8vw, 6rem) 0; }
+        .content-spacing > * + * { margin-top: 1.5rem; }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .animate-fade-in-delayed {
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-float-delayed {
+            animation: float 3s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+        
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            transition: all 200ms ease-out;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            background: var(--natural-green-dark);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 200ms ease-out;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary);
+            transition: all 250ms ease-out;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .contact-card {
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            background: var(--card);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--input);
+            color: var(--foreground);
+            font-family: var(--font-sans);
+            transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(69, 125, 90, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--foreground);
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 300ms ease-out, padding 300ms ease-out;
+            color: var(--muted-foreground);
+        }
+        
+        .faq-answer.open {
+            max-height: 200px;
+            padding-top: 1rem;
+        }
+        
+        .faq-icon {
+            transition: transform 300ms ease-out;
+        }
+        
+        .faq-icon.open {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body style="font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.6;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50" style="background: rgba(249, 250, 251, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);">
+        <nav class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
+                    <a href="collections.html" class="nav-link">Collections</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="sustainability.html" class="nav-link">Sustainability</a>
+                    <a href="contact.html" class="nav-link active">Contact</a>
+                </div>
+                
+                <!-- Icons -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                    </a>
+                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </a>
+                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative section-padding" style="background: linear-gradient(135deg, var(--natural-cream) 0%, var(--secondary) 100%);">
+        <div class="container-custom text-center">
+            <div class="max-w-3xl mx-auto content-spacing animate-fade-in">
+                <h1 class="heading-xl font-serif font-light">Get in Touch</h1>
+                <p class="text-lg text-gray-600">
+                    We'd love to hear from you. Whether you have questions about our products, 
+                    sustainability practices, or just want to share your Natural story.
+                </p>
+            </div>
+            
+            <div class="absolute -top-6 -right-6 animate-float" style="color: var(--natural-green-medium);">
+                <i data-lucide="message-circle" class="w-12 h-12"></i>
+            </div>
+            <div class="absolute -bottom-4 -left-4 animate-float-delayed" style="color: var(--natural-green-light);">
+                <i data-lucide="heart" class="w-8 h-8"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Methods -->
+    <section class="section-padding">
+        <div class="container-custom">
+            <div class="grid-consistent grid-3 mb-12">
+                <!-- Email -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="mail" class="w-12 h-12 mx-auto"></i>
+                    </div>
+                    <h3 class="heading-sm font-serif mb-3">Email Us</h3>
+                    <p class="text-gray-600 mb-4">
+                        We typically respond within 24 hours during business days.
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <div><strong>General:</strong> hello@natural.com</div>
+                        <div><strong>Support:</strong> support@natural.com</div>
+                        <div><strong>Press:</strong> press@natural.com</div>
+                    </div>
+                </div>
+                
+                <!-- Phone -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="phone" class="w-12 h-12 mx-auto"></i>
+                    </div>
+                    <h3 class="heading-sm font-serif mb-3">Call Us</h3>
+                    <p class="text-gray-600 mb-4">
+                        Speak with our customer care team Monday-Friday, 9AM-6PM EST.
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <div><strong>US/Canada:</strong> 1-800-NATURAL</div>
+                        <div><strong>International:</strong> +1-555-123-4567</div>
+                    </div>
+                </div>
+                
+                <!-- Social -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="message-square" class="w-12 h-12 mx-auto"></i>
+                    </div>
+                    <h3 class="heading-sm font-serif mb-3">Social Media</h3>
+                    <p class="text-gray-600 mb-4">
+                        Follow us for daily inspiration and quick responses to questions.
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="section-padding" style="background: var(--muted);">
+        <div class="container-custom">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Form -->
+                <div class="content-spacing">
+                    <h2 class="heading-lg font-serif">Send us a Message</h2>
+                    <p class="text-gray-600">
+                        Fill out the form below and we'll get back to you as soon as possible.
+                    </p>
+                    
+                    <form class="space-y-6" id="contactForm">
+                        <div class="grid grid-2 gap-4">
+                            <div>
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-input" required>
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="form-label">Subject</label>
+                            <select id="subject" name="subject" class="form-input" required>
+                                <option value="">Select a topic</option>
+                                <option value="product">Product Questions</option>
+                                <option value="order">Order Support</option>
+                                <option value="sustainability">Sustainability Questions</option>
+                                <option value="wholesale">Wholesale Inquiry</option>
+                                <option value="press">Press & Media</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" name="message" class="form-input form-textarea" placeholder="Tell us how we can help you..." required></textarea>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="newsletter" name="newsletter" class="mt-1">
+                            <label for="newsletter" class="text-sm text-gray-600">
+                                Subscribe to our newsletter for updates on new products and sustainability initiatives
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full">Send Message</button>
+                    </form>
+                </div>
+                
+                <!-- Image -->
+                <div class="relative">
+                    <div class="card-consistent" style="aspect-ratio: 4/5;">
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Natural customer service" class="img-cover">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 animate-float" style="color: var(--natural-green-medium);">
+                        <i data-lucide="send" class="w-16 h-16"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding">
+        <div class="container-custom">
+            <div class="text-center content-spacing mb-12">
+                <h2 class="heading-lg font-serif">Frequently Asked Questions</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Quick answers to common questions about our products and policies
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>What materials do you use in your clothing?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We use only sustainable materials including organic cotton, hemp, linen, bamboo fiber, TENCEL™, and recycled fibers. All materials are sourced from certified suppliers who meet our strict environmental and ethical standards.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>How do I care for my Natural clothing?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Each garment comes with specific care instructions. Generally, we recommend cold water washing, air drying, and using eco-friendly detergents. Proper care helps extend the life of your garments and maintains their sustainable properties.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>What is your return and exchange policy?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We offer free returns and exchanges within 30 days of purchase. Items must be unworn with tags attached. We also accept gently worn items through our take-back program for recycling into new products.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>Do you offer international shipping?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, we ship to over 10 countries worldwide. All international orders are carbon-neutral through our partnership with verified offset programs. Shipping costs and delivery times vary by location.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>How can I be sure your products are truly sustainable?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We're certified by GOTS, OEKO-TEX, and FSC, with full supply chain transparency. We publish annual sustainability reports and welcome third-party audits. Every claim we make is backed by verifiable data and certifications.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 6 -->
+                <div class="faq-item">
+                    <button class="faq-question w-full flex justify-between items-center" onclick="toggleFAQ(this)">
+                        <span>Do you offer wholesale or bulk orders?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-icon"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, we work with retailers and organizations who share our values. Please contact us at wholesale@natural.com with your requirements, and our team will provide pricing and minimum order information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Locator -->
+    <section class="section-padding" style="background: var(--muted);">
+        <div class="container-custom">
+            <div class="text-center content-spacing mb-12">
+                <h2 class="heading-lg font-serif">Visit Our Partners</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    While we're primarily online, you can find Natural products at select sustainable fashion retailers
+                </p>
+            </div>
+            
+            <div class="grid-consistent grid-3">
+                <!-- Location 1 -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="map-pin" class="w-8 h-8 mx-auto"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">New York, NY</h3>
+                    <p class="text-sm text-gray-600 mb-2">Green Fashion Collective</p>
+                    <p class="text-sm text-gray-600">123 Sustainable St, SoHo</p>
+                </div>
+                
+                <!-- Location 2 -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="map-pin" class="w-8 h-8 mx-auto"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Los Angeles, CA</h3>
+                    <p class="text-sm text-gray-600 mb-2">Eco Chic Boutique</p>
+                    <p class="text-sm text-gray-600">456 Conscious Ave, Venice</p>
+                </div>
+                
+                <!-- Location 3 -->
+                <div class="contact-card">
+                    <div class="mb-4" style="color: var(--primary);">
+                        <i data-lucide="map-pin" class="w-8 h-8 mx-auto"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Austin, TX</h3>
+                    <p class="text-sm text-gray-600 mb-2">Natural Threads Co.</p>
+                    <p class="text-sm text-gray-600">789 Earth Way, Downtown</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="section-padding" style="background: var(--card); border-top: 1px solid var(--border);">
+        <div class="container-custom">
+            <div class="grid grid-4 gap-8">
+                <!-- Company Info -->
+                <div class="content-spacing">
+                    <h3 class="font-serif text-xl natural-text-gradient">Natural</h3>
+                    <p class="text-sm text-gray-600">
+                        Sustainable clothing for the conscious modern lifestyle.
+                    </p>
+                    <div class="flex space-x-4">
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Shop</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
+                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
+                    </div>
+                </div>
+                
+                <!-- Support -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Size Guide</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping & Returns</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Care Instructions</a></div>
+                        <div><a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
+                    </div>
+                </div>
+                
+                <!-- Company -->
+                <div class="content-spacing">
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <div class="space-y-2 text-sm">
+                        <div><a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
+                        <div><a href="sustainability.html" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a></div>
+                        <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t pt-8 mt-8 text-center text-sm text-gray-600" style="border-color: var(--border);">
+                <p>&copy; 2024 Natural. All rights reserved. Made with love for the planet.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // FAQ Toggle Function
+        function toggleFAQ(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-answer').forEach(faq => {
+                if (faq !== answer) {
+                    faq.classList.remove('open');
+                    faq.previousElementSibling.querySelector('.faq-icon').classList.remove('open');
+                }
+            });
+            
+            // Toggle current FAQ
+            answer.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+        
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
+            
+            setTimeout(() => {
+                submitButton.textContent = 'Message Sent!';
+                submitButton.style.background = 'var(--natural-green-medium)';
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                    submitButton.style.background = '';
+                    e.target.reset();
+                }, 2000);
+            }, 1000);
+        });
+        
+        // Form Input Animations
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.01)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.contact-card, .faq-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
