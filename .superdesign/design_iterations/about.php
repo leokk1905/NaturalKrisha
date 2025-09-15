@@ -1,3 +1,33 @@
+<?php
+// =============================================
+// NATURAL CLOTHING - ABOUT PAGE
+// =============================================
+
+require_once __DIR__ . '/api/Database.php';
+require_once __DIR__ . '/config.php';
+
+// Start session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize guest session if needed
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['guest_session_id'])) {
+    $_SESSION['guest_session_id'] = uniqid('guest_', true);
+}
+
+// Initialize managers
+$cartManager = new CartManager();
+
+// Get cart count for header
+$userId = $_SESSION['user_id'] ?? null;
+$sessionId = $_SESSION['guest_session_id'] ?? null;
+$cartCount = $cartManager->getCartItemCount($userId, $sessionId);
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$userName = $_SESSION['user_name'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -199,6 +229,40 @@
         .timeline-item:last-child::after {
             display: none;
         }
+        
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            z-index: 1000;
+            border: 1px solid var(--border);
+        }
+        
+        .dropdown-content a {
+            color: var(--foreground);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 200ms;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--muted);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body style="font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.6;">
@@ -209,27 +273,44 @@
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                    <a href="index.php" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
                 </div>
                 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
-                    <a href="collections.html" class="nav-link">Collections</a>
-                    <a href="about.html" class="nav-link active">About</a>
-                    <a href="sustainability.html" class="nav-link">Sustainability</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
+                    <a href="index.php" class="nav-link">Home</a>
+                    <a href="collections.php" class="nav-link">Collections</a>
+                    <a href="about.php" class="nav-link active">About</a>
+                    <a href="sustainability.php" class="nav-link">Sustainability</a>
+                    <a href="contact.php" class="nav-link">Contact</a>
                 </div>
                 
                 <!-- Icons -->
                 <div class="flex items-center space-x-4">
-                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                    <a href="cart.php" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" id="cart-count"><?php echo $cartCount; ?></span>
                     </a>
-                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <i data-lucide="user" class="w-5 h-5"></i>
-                    </a>
+                    
+                    <?php if ($isLoggedIn): ?>
+                        <div class="dropdown">
+                            <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight: 500;">
+                                    <?php echo htmlspecialchars($userName); ?>
+                                </div>
+                                <a href="profile.php">Profile</a>
+                                <a href="orders.php">Orders</a>
+                                <a href="#" onclick="logout()">Logout</a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <a href="login.php" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="user" class="w-5 h-5"></i>
+                        </a>
+                    <?php endif; ?>
                     <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
@@ -250,7 +331,7 @@
                         Natural represents the intersection of conscious design and timeless style.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="collections.html" class="btn-primary">Explore Our Values</a>
+                        <a href="collections.php" class="btn-primary">Explore Our Values</a>
                     </div>
                 </div>
                 
@@ -526,8 +607,8 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="collections.html" class="btn-primary" style="background: var(--natural-green-dark); color: white;">Shop Sustainable</a>
-                    <a href="sustainability.html" class="btn-primary" style="background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid white;">Learn More</a>
+                    <a href="collections.php" class="btn-primary" style="background: var(--natural-green-dark); color: white;">Shop Sustainable</a>
+                    <a href="sustainability.php" class="btn-primary" style="background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid white;">Learn More</a>
                 </div>
                 
                 <div class="absolute top-8 left-8 animate-float" style="color: rgba(255, 255, 255, 0.3);">
@@ -567,10 +648,10 @@
                 <div class="content-spacing">
                     <h4 class="font-semibold mb-4">Shop</h4>
                     <div class="space-y-2 text-sm">
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
                     </div>
                 </div>
                 
@@ -581,7 +662,7 @@
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Size Guide</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping & Returns</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Care Instructions</a></div>
-                        <div><a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
+                        <div><a href="contact.php" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
                     </div>
                 </div>
                 
@@ -589,8 +670,8 @@
                 <div class="content-spacing">
                     <h4 class="font-semibold mb-4">Company</h4>
                     <div class="space-y-2 text-sm">
-                        <div><a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
-                        <div><a href="sustainability.html" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
+                        <div><a href="about.php" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
+                        <div><a href="sustainability.php" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a></div>
                     </div>
@@ -643,6 +724,23 @@
             card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
             observer.observe(card);
         });
+        
+        // Logout function
+        function logout() {
+            fetch('api/auth.php?action=logout', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = 'login.php';
+            });
+        }
     </script>
 </body>
 </html>

@@ -1,3 +1,33 @@
+<?php
+// =============================================
+// NATURAL CLOTHING - CONTACT PAGE
+// =============================================
+
+require_once __DIR__ . '/api/Database.php';
+require_once __DIR__ . '/config.php';
+
+// Start session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize guest session if needed
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['guest_session_id'])) {
+    $_SESSION['guest_session_id'] = uniqid('guest_', true);
+}
+
+// Initialize managers
+$cartManager = new CartManager();
+
+// Get cart count for header
+$userId = $_SESSION['user_id'] ?? null;
+$sessionId = $_SESSION['guest_session_id'] ?? null;
+$cartCount = $cartManager->getCartItemCount($userId, $sessionId);
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$userName = $_SESSION['user_name'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -247,25 +277,25 @@
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="natural_clothing_1.html" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
+                    <a href="index.php" class="text-2xl font-serif font-light natural-text-gradient">Natural</a>
                 </div>
                 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="natural_clothing_1.html" class="nav-link">Home</a>
-                    <a href="collections.html" class="nav-link">Collections</a>
-                    <a href="about.html" class="nav-link">About</a>
-                    <a href="sustainability.html" class="nav-link">Sustainability</a>
-                    <a href="contact.html" class="nav-link active">Contact</a>
+                    <a href="index.php" class="nav-link">Home</a>
+                    <a href="collections.php" class="nav-link">Collections</a>
+                    <a href="about.php" class="nav-link">About</a>
+                    <a href="sustainability.php" class="nav-link">Sustainability</a>
+                    <a href="contact.php" class="nav-link active">Contact</a>
                 </div>
                 
                 <!-- Icons -->
                 <div class="flex items-center space-x-4">
-                    <a href="cart.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                    <a href="cart.php" class="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" id="cart-count"><?php echo $cartCount; ?></span>
                     </a>
-                    <a href="profile.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <a href="login.php" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <i data-lucide="user" class="w-5 h-5"></i>
                     </a>
                     <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -310,9 +340,9 @@
                         We typically respond within 24 hours during business days.
                     </p>
                     <div class="space-y-2 text-sm">
-                        <div><strong>General:</strong> hello@natural.com</div>
-                        <div><strong>Support:</strong> support@natural.com</div>
-                        <div><strong>Press:</strong> press@natural.com</div>
+                        <div><strong>General:</strong> krisha1467@gmail.com</div>
+                        <div><strong>Support:</strong> krisha1467@gmail.com</div>
+                        <div><strong>Press:</strong> krisha1467@gmail.com</div>
                     </div>
                 </div>
                 
@@ -326,8 +356,8 @@
                         Speak with our customer care team Monday-Friday, 9AM-6PM EST.
                     </p>
                     <div class="space-y-2 text-sm">
-                        <div><strong>US/Canada:</strong> 1-800-NATURAL</div>
-                        <div><strong>International:</strong> +1-555-123-4567</div>
+                        <div><strong>Thailand:</strong> +66 06-4970-3020</div>
+                        <div><strong>WhatsApp:</strong> +66 06-4970-3020</div>
                     </div>
                 </div>
                 
@@ -341,9 +371,9 @@
                         Follow us for daily inspiration and quick responses to questions.
                     </p>
                     <div class="flex justify-center space-x-4">
-                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <a href="https://instagram.com/natu.ral10.21" target="_blank" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
-                        </button>
+                        </a>
                         <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </button>
@@ -561,9 +591,9 @@
                         Sustainable clothing for the conscious modern lifestyle.
                     </p>
                     <div class="flex space-x-4">
-                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <a href="https://instagram.com/natu.ral10.21" target="_blank" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
-                        </button>
+                        </a>
                         <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </button>
@@ -577,10 +607,10 @@
                 <div class="content-spacing">
                     <h4 class="font-semibold mb-4">Shop</h4>
                     <div class="space-y-2 text-sm">
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
-                        <div><a href="collections.html" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Essentials</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Seasonal</a></div>
+                        <div><a href="collections.php" class="text-gray-600 hover:text-primary transition-colors">Sale</a></div>
                     </div>
                 </div>
                 
@@ -591,7 +621,7 @@
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Size Guide</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping & Returns</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Care Instructions</a></div>
-                        <div><a href="contact.html" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
+                        <div><a href="contact.php" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a></div>
                     </div>
                 </div>
                 
@@ -599,8 +629,8 @@
                 <div class="content-spacing">
                     <h4 class="font-semibold mb-4">Company</h4>
                     <div class="space-y-2 text-sm">
-                        <div><a href="about.html" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
-                        <div><a href="sustainability.html" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
+                        <div><a href="about.php" class="text-gray-600 hover:text-primary transition-colors">About Us</a></div>
+                        <div><a href="sustainability.php" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a></div>
                         <div><a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a></div>
                     </div>
